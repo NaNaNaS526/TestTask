@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.SceneManagement.SceneManager;
@@ -21,11 +20,10 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(audioManager);
     }
+
     private void StartGame()
     {
         LoadScene(1);
         startGameButton.gameObject.SetActive(false);
     }
-
-    
 }

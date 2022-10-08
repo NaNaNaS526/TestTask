@@ -14,11 +14,9 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        if (PlayerPrefs.GetInt("SoundVolume") != 0)
-        {
-            int soundVolume = PlayerPrefs.GetInt("SoundVolume");
-            soundVolumeSlider.value = soundVolume;
-        }
+
+        soundVolumeSlider.value = PlayerPrefs.GetInt("SoundVolume");
+
         soundSettingsButton.onClick.AddListener(DisplaySoundSettingsPanel);
     }
 
