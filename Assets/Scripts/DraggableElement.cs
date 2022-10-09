@@ -3,21 +3,24 @@ using UnityEngine.EventSystems;
 
 public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] private RectTransform startPosition;
+    [SerializeField] private RectTransform startTransform;
     public Vector3 lastPosition;
 
     private Canvas _mainCanvas;
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
     public bool isInSlot;
+    private Vector3 _startPosition;
 
     private void Start()
     {
         _mainCanvas = GetComponentInParent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
-        
-        _rectTransform.position = startPosition.position;
+
+        _startPosition = startTransform.position;
+        _rectTransform.position = _startPosition;
+        lastPosition = _startPosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -35,14 +38,7 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     {
         if (!isInSlot)
         {
-            if (lastPosition != null)
-            {
-                _rectTransform.position = lastPosition;
-            }
-            else
-            {
-                _rectTransform.position = startPosition.position;
-            }
+            _rectTransform.position = lastPosition;
         }
 
         _canvasGroup.blocksRaycasts = true;
