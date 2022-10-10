@@ -13,15 +13,29 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gameEndPanel;
     [SerializeField] private TextMeshProUGUI gameResultText;
     [SerializeField] private Button restartGameButton;
-    
+    [SerializeField] private GameObject _middleLine;
 
+    [SerializeField] private SlotForDraggableElements gridCell4;
+    [SerializeField] private SlotForDraggableElements gridCell5;
+    [SerializeField] private SlotForDraggableElements gridCell6;
+
+    private DraggableElement[] _draggableElements;
 
     private void Start()
     {
         startGameButton.onClick.AddListener(StartGame);
         restartGameButton.onClick.AddListener(RestartGame);
         IndestructibleObjectsSettings();
-        
+        _draggableElements = gameCanvas.GetComponentsInChildren<DraggableElement>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (gridCell4.isSlotEmpty == false & gridCell5.isSlotEmpty == false & gridCell6.isSlotEmpty == false)
+        {
+            _middleLine.GetComponent<Animator>().SetBool("IsDisappearing",true);
+            ViewGameEndPanel("Victory", true);
+        }
     }
 
     private void IndestructibleObjectsSettings()
@@ -39,15 +53,24 @@ public class GameManager : MonoBehaviour
         gameCanvas.gameObject.SetActive(gameCanvas.gameObject.activeSelf == false);
     }
 
-    public void ViewGameEndPanel(string result)
+    public void ViewGameEndPanel(string result, bool isWon)
     {
         gameEndPanel.SetActive(true);
         gameResultText.text = result;
+        if (isWon)
+        {
+            foreach (var a in _draggableElements)
+            {
+                var aPosition = a.GetComponent<RectTransform>();
+                aPosition.position = a.startPosition;
+            }
+        }
     }
 
     private void RestartGame()
     {
         LoadScene(1);
+        gridCell5.isSlotEmpty = true;
         gameEndPanel.SetActive(false);
     }
 }

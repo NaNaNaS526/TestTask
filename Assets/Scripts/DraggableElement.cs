@@ -10,7 +10,8 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
     public bool isInSlot;
-    private Vector3 _startPosition;
+    public Vector3 startPosition;
+    [SerializeField] private SlotForDraggableElements slot;
 
     private void Start()
     {
@@ -18,9 +19,9 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
 
-        _startPosition = startTransform.position;
-        _rectTransform.position = _startPosition;
-        lastPosition = _startPosition;
+        startPosition = startTransform.position;
+        _rectTransform.position = startPosition;
+        lastPosition = startPosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -39,8 +40,14 @@ public class DraggableElement : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         if (!isInSlot)
         {
             _rectTransform.position = lastPosition;
+            return;
         }
-
+        SlotForDraggableElements? testSlot = eventData.pointerEnter.transform.gameObject.GetComponent<SlotForDraggableElements>();
+        if (testSlot != null)
+        {
+            slot.isSlotEmpty = true;
+            slot = testSlot;
+        }
         _canvasGroup.blocksRaycasts = true;
     }
 }
